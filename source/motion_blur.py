@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
   
-img = cv2.imread('../Downloads/ferrari.jpg')
+img = cv2.imread('../../Downloads/stop.jpg')
   
 # Specify the kernel size.
 # The greater the size, the more the motion.
