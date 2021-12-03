@@ -29,7 +29,7 @@ def add_rain(image):
 	for rain_drop in rain_drops:        
 		cv2.line(image,(rain_drop[0],rain_drop[1]),(rain_drop[0]+slant,rain_drop[1]+drop_length),drop_color,drop_width)    
 	
-	image= cv2.blur(image,(7,7)) 
+	image= cv2.blur(image,(3,3)) 
 	## rainy view are blurry        
 	
 	brightness_coefficient = 0.7 
@@ -47,7 +47,8 @@ def add_rain(image):
 	return image_RGB
 
 if __name__ == "__main__":
-	image = cv2.imread("../Downloads/photo.jpg")
+	image = cv2.imread("../../Downloads/photo.jpg")
 	new_img = add_rain(image)
 	print(new_img.shape)
-	cv2.imwrite('new_img.jpg', new_img)
+	cv2.imwrite('../../Desktop/img.jpg', new_img)
+
