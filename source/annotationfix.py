@@ -3,6 +3,15 @@ import json
 import numpy as np
 import sys
 
+'''
+The main method outputs 2 different modified annotations:
+1) With images containing invalid categories removed entirely; then pruned
+2) With images containing invalid categories having the annotations of those categories removed; then pruned
+
+Example input for command line:
+python annotationfix.py annotations.json output/annotations 3 True
+'''
+
 # Loads a json file
 def loadData(path):
     # Open file
@@ -122,58 +131,56 @@ def runTests(imgs, cats, counts, msg):
         print(str(counts))
 
 # python3 annotationfix.py <input> <output> <upper> <test?>
-def main(): #This can most likely be broken up into smaller functions
+def main(input, output, upper, test): #This can most likely be broken up into smaller functions
+    # Other constants
+    path_deleted = '_deleted.json'
+    path_edited = '_edited.json'
+
+    # Get data
+    imgs, cats = loadData(input)
+    counts, countMap = getCounts(imgs, cats)
+    low, high = getThresholds(counts, upper)
+
+    # Print info
+    print(getInfo(imgs, counts))
+
+    # Remove categories
+    remove, keep = getRemoveCats(counts, low)
+
+    # Delete images
+    imgs_deleted = removeImgsWithCats(imgs, remove)
+    counts_deleted, countMap_deleted = getCounts(imgs_deleted, keep)
+
+    # Remove annotations instead
+    imgs_edited = removeCatsFromImgs(imgs, remove)
+    counts_edited, countMap_edited = getCounts(imgs_edited, keep)
+
+    # Prune both
+    imgs_deleted, counts_deleted = pruneImgs(imgs_deleted, counts_deleted, countMap_deleted, low, high)
+    imgs_edited, counts_edited = pruneImgs(imgs_edited, counts_edited, countMap_edited, low, high)
+
+    # Print info
+    print(getInfo(imgs_deleted, counts_deleted))
+    print(getInfo(imgs_edited, counts_edited))
+
+    # Run testing
+    if test:
+        runTests(imgs_deleted, keep, counts_deleted, 'deleted')
+        runTests(imgs_edited, keep, counts_edited, 'edited')
+    
+    # Save the two jsons
+    saveData(output + path_deleted, imgs_deleted, keep)
+    saveData(output + path_edited, imgs_edited, keep)
+    # Done
+        
+# Run file if applicable
+if __name__ == '__main__':
     if len(sys.argv) >= 4:
         # Command line
         input = sys.argv[1]
         output = sys.argv[2]
         upper = float(sys.argv[3])
         test = len(sys.argv) >= 5 and sys.argv[4] == 'True'
-
-        # Other constants
-        path_deleted = '_deleted.json'
-        path_edited = '_edited.json'
-
-        # Get data
-        imgs, cats = loadData(input)
-        counts, countMap = getCounts(imgs, cats)
-        low, high = getThresholds(counts, upper)
-
-        # Print info
-        print(getInfo(imgs, counts))
-
-        # Remove categories
-        remove, keep = getRemoveCats(counts, low)
-
-        # Delete images
-        imgs_deleted = removeImgsWithCats(imgs, remove)
-        counts_deleted, countMap_deleted = getCounts(imgs_deleted, keep)
-
-        # Remove annotations instead
-        imgs_edited = removeCatsFromImgs(imgs, remove)
-        counts_edited, countMap_edited = getCounts(imgs_edited, keep)
-
-        # Prune both
-        imgs_deleted, counts_deleted = pruneImgs(imgs_deleted, counts_deleted, countMap_deleted, low, high)
-        imgs_edited, counts_edited = pruneImgs(imgs_edited, counts_edited, countMap_edited, low, high)
-
-        # Print info
-        print(getInfo(imgs_deleted, counts_deleted))
-        print(getInfo(imgs_edited, counts_edited))
-
-        # Run testing
-        if test:
-            runTests(imgs_deleted, keep, counts_deleted, 'deleted')
-            runTests(imgs_edited, keep, counts_edited, 'edited')
-        
-        # Save the two jsons
-        saveData(output + path_deleted, imgs_deleted, keep)
-        saveData(output + path_edited, imgs_edited, keep)
-        # Done
+        main(input, output, upper, test)
     else:
         print('Too few arguments.  Required: input output upper')
-
-main() # Call the main function
-
-# Exact example:
-# python annotationfix.py annotations.json output/annotations 3 True
