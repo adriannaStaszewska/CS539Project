@@ -5,11 +5,11 @@ import sys
 
 '''
 The main method outputs 2 different modified annotations:
-1) With images containing invalid categories removed entirely; then pruned
+1) With images containing invalid categories removed entirely; then pruned (Removed)
 2) With images containing invalid categories having the annotations of those categories removed; then pruned
 
 Example input for command line:
-python annotationfix.py annotations.json output/annotations 3 True
+python annotationfix.py annotations.json output/annotations 2 0.2 True > output/output.txt
 '''
 
 # Loads a json file
@@ -19,6 +19,7 @@ def loadData(path):
         # Get and return the data as two values
         data = json.load(file)
         return data['imgs'], data['types']
+
 # saves a json file
 def saveData(path, imgs, cats):
     # Zip into big dictionary
@@ -101,7 +102,7 @@ def pruneImgs(imgs, counts, countMap, low, high):
         imgMap = countMap[key]
         sum = 0
         for cat, count in imgMap.items():
-            if counts[cat] >= low and counts[cat] - count < low: # Do not allow a sparse category to be removed
+            if counts[cat] - count < low: # Do not allow a sparse category to be removed
                 sum = 0
                 break
             elif cat in highCats: # In favor of removing
@@ -130,14 +131,45 @@ def runTests(imgs, cats, counts, msg):
         print('Expected:')
         print(str(counts))
 
-# python3 annotationfix.py <input> <output> <upper> <test?>
-def main(input, output, upper, test): #This can most likely be broken up into smaller functions
+# Returns the topmost folder of a filepath
+def getFolder(str):
+    return str[:str.index('/')] if str.index('/') >= 0 else ''
+
+# Removes a percentage of background images
+def removeBackground(imgs, background):
+    # Filter background images
+    background_imgs = {}
+    foreground_imgs = {}
+    for id,img in imgs.items():
+        if len(img['objects']) == 0:
+            background_imgs[id]=img
+        else:
+            foreground_imgs[id]=img
+    # How many background images to use
+    use_bg = int(background * len(background_imgs))
+    # Shuffle and slice
+    background_keys = list(background_imgs.keys())
+    np.random.shuffle(background_keys)
+    background_keys = background_keys[:use_bg]
+    # Add back
+    for key in background_keys:
+        foreground_imgs[key] = background_imgs[key]
+    # Return the result
+    return foreground_imgs
+
+# python3 annotationfix.py <input> <output> <upper> <background> <test?>
+def main(input, output, upper, background, test): #This can most likely be broken up into smaller functions
     # Other constants
-    path_deleted = '_deleted.json'
-    path_edited = '_edited.json'
+    path_edited = '.json'
 
     # Get data
     imgs, cats = loadData(input)
+
+    # Get splits
+    folders = set([getFolder(img['path']) for (id, img) in imgs.items() if img['path'].index('/')>=0])
+    print(folders)
+
+    # Remove useless categories
     counts, countMap = getCounts(imgs, cats)
     low, high = getThresholds(counts, upper)
 
@@ -147,40 +179,49 @@ def main(input, output, upper, test): #This can most likely be broken up into sm
     # Remove categories
     remove, keep = getRemoveCats(counts, low)
 
-    # Delete images
-    imgs_deleted = removeImgsWithCats(imgs, remove)
-    counts_deleted, countMap_deleted = getCounts(imgs_deleted, keep)
-
-    # Remove annotations instead
+    # Remove annotations
     imgs_edited = removeCatsFromImgs(imgs, remove)
-    counts_edited, countMap_edited = getCounts(imgs_edited, keep)
 
-    # Prune both
-    imgs_deleted, counts_deleted = pruneImgs(imgs_deleted, counts_deleted, countMap_deleted, low, high)
-    imgs_edited, counts_edited = pruneImgs(imgs_edited, counts_edited, countMap_edited, low, high)
+    # Cacluate separately based on splits
+    for folder in folders:
+        # Filter
+        folder_imgs = {id:img for (id, img) in imgs_edited.items() if getFolder(img['path'])==folder}
+        folder_counts, folder_countMap = getCounts(folder_imgs, keep)
 
-    # Print info
-    print(getInfo(imgs_deleted, counts_deleted))
-    print(getInfo(imgs_edited, counts_edited))
+        # Prune
+        folder_imgs, folder_counts = pruneImgs(folder_imgs, folder_counts, folder_countMap, low, high)
 
-    # Run testing
-    if test:
-        runTests(imgs_deleted, keep, counts_deleted, 'deleted')
-        runTests(imgs_edited, keep, counts_edited, 'edited')
+        # Print start of info
+        print(folder + ":")
+        # Print initial info
+        print("-------")
+        print(getInfo(folder_imgs, folder_counts))
+
+        # New: Remove background images
+        folder_imgs = removeBackground(folder_imgs, background)
+
+        # Print end info
+        print("-------")
+        print(getInfo(folder_imgs, folder_counts))
+
+        # Run testing
+        if test:
+            runTests(folder_imgs, keep, folder_counts, folder)
     
-    # Save the two jsons
-    saveData(output + path_deleted, imgs_deleted, keep)
-    saveData(output + path_edited, imgs_edited, keep)
+        # Save the json
+        saveData(output + '_' + folder + path_edited, folder_imgs, keep)
     # Done
-        
+
+
 # Run file if applicable
 if __name__ == '__main__':
-    if len(sys.argv) >= 4:
+    if len(sys.argv) >= 5:
         # Command line
         input = sys.argv[1]
         output = sys.argv[2]
         upper = float(sys.argv[3])
-        test = len(sys.argv) >= 5 and sys.argv[4] == 'True'
-        main(input, output, upper, test)
+        background = float(sys.argv[4])
+        test = len(sys.argv) >= 6 and sys.argv[5] == 'True'
+        main(input, output, upper, background, test)
     else:
-        print('Too few arguments.  Required: input output upper')
+        print('Too few arguments.  Required: input output background upper')
