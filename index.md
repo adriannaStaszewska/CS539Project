@@ -7,7 +7,8 @@ TBD
 The locating and identification of traffic signs is key for driving agents to be successful in navigating roadways.  These signs come in varying shapes, sizes, colors, and patterns.  For this project, we explored the usage of the machine learning technique Mask R-CNN on a traffic sign dataset to measure the difference in performance while utilizing custom data augmentation methods.
 
 ## Related Work
-We gave our paper presentation related to this project on the (Mapillary Dataset Research)[https://doi.org/10.1109/TITS.2019.2913588].  This dataset contains a diverse selection of categories, and benchmarks the quality of the dataset using various machine learning techniques, including Mask R-CNN.
+We gave our paper presentation related to this paper on (Deep Learning for Large-Scale Traffic-Sign
+Detection and Recognition)[https://doi.org/10.1109/TITS.2019.2913588].  The dataset within this paper contains a diverse selection of categories.  The paper discusses experiments on an augmented Mask R-CNN.  It also employs data augmentation to expand the size of its data.
 
 ## Tools
 - [Vizhub](https://vizhub.com/): A website based around creating interactive data visualizations, created by @ckelleher@wpi.edu.  Using this tool, we were able to visualize properties of the dataset.
