@@ -35,4 +35,6 @@ if __name__ == '__main__': # Check if this file was ran directly
     encoding = 'UTF-16' # Constant to be used later
     if len(sys.argv) >= 2: # Check for necessary arguments
         with open(sys.argv[1], 'rb') as in_file: # Open the file
+            if len(sys.argv) >= 3: # Check additional arugments
+                encoding = sys.argv[2] # Adjust encoding from default
             main(in_file.read().decode(encoding)) # Why was this file automatically in utf-16?
