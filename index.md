@@ -1,8 +1,5 @@
 # CS539 Group Project
 
-## Abstract
-TBD
-
 ## Introduction
 The locating and identification of traffic signs is key for driving agents to be successful in navigating roadways.  These signs come in varying shapes, sizes, colors, and patterns.  For this project, we explored the usage of the machine learning technique Mask R-CNN on a traffic sign dataset to measure the difference in performance while utilizing custom data augmentation methods.
 
@@ -36,7 +33,7 @@ Finally, we removed a percentage of the images that were in the background categ
 ### Purpose
 Our approach focused on augmenting the dataset, to make the resulting model better equipped to deal with real driving situations.  We experimented with different custom-made data augmentation technique subsets to see whether the base Mask-RCNN faired better or worse.
 
-### Process (TBD, I'm speculating on this)
+### Process
 Before we utilized any of the data augmentation, we first trained a model on the base dataset.  We started with those weights when running further training using data augmentation.
 
 For each epoch thereafter, we took a bootstrap sample of the dataset, then selected several of the images to be transformed with our augmentation effects (outlined below).  The epoch would then train on this data.
@@ -47,16 +44,20 @@ The first technique we used to augment the data was motion blur.  This was done 
 If no such speed signs exist, then a speed is sampled from a normal distribution. This normal distribution has mean and standard deviation derived from the subset of images containing speed signs within the data.
 
 ### Rain Particles
-TBD
+The next data augmentation technique we used was the simulation of rain.  To do this, we first lower the brightness of the image; rainy days are generally darker than clear days.  Then, we generate many locations to place raindrops and place the raindrops on the image using cv2.line().
 
-### TBD
-TBD
+### Random Noise
+The last data augmentation technique we used was adding random noise to the image.  This was done by selecting points within the image and brightening or darkening them.
 
 ## Model
-TBD (Put layers outputs here with captions)
+<details>
+<summary>Layers</summary>
+<p>
+Fill layers in here
+</p>
+</details>
 
 ## Methodology
-### Mask R-CNN
 We trained a Mask R-CNN model within this project.  A brief summary of this technique is outlined within this section.
 
 There are two primary modules within Mask R-CNN:
@@ -71,14 +72,17 @@ The model is trained in four steps:
 
 A Feature Pyramid Network (FPN) is also utilized.  This approach is used to improve the model's performance on smaller objects within the image.  To do this, it extracts features from lower layers before downsampling occurs, preventing the loss of significant detail of these objects.
 
-### Training process
-TBD
-
 ## Results
 TBD
 
 # Evaluation Metrics
-TBD
+
+- rpn_class_loss: Loss of the RPN for the class prediction.
+- rpn_bbox_loss: Loss of the RPN because of bounding box differences
+- mrcnn_class_loss: Loss of the MRCNN for the class prediction.
+- mrcnn_bbox_loss: Loss of the bounding box refinement of the MRCNN.
+- mrcnn_mask_loss: Cross entropy loss for the mask head.
+- loss: aggregate of previous metrics.
 
 ## Conclusion
 TBD
@@ -88,7 +92,10 @@ TBD
 - [Presentation](https://wpi0-my.sharepoint.com/:p:/g/personal/ymao4_wpi_edu/EWkDtaueJTpHhs8x-Wj8HUwBRH5k6N54RdvddHyJOPJRxg?e=GN4w5x)
 
 ## Works Cited
-TBD
+- https://github.com/matterport/Mask_RCNN
+- D. Tabernik, D. Skocaj, Deep Learning for Large-Scale Traffic-Sign Detection and Recognition, IEEE Trans. Intell. Transp. Syst. 21 (2020) 1427–1440. https://doi.org/10.1109/TITS.2019.2913588.
+- H. Kaiming, G. Gkioxara, P. Dollar, and R. Girshick, “Mask R-CNN,” in International Conference on Computer Vision, 2017, pp. 2961–2969. 2, 3, 12
+- S. Ren, K. He, R. Girshick, and J. Sun, “Faster R-CNN: Towards RealTime Object Detection with Region Proposal Networks,” in NIPS, 2015. 3
 
 ## Team
 ### Davesh Datwani (dbdatwani@wpi.edu)
@@ -108,42 +115,3 @@ For this project, I worked on data visualization, the website, preprocessing the
 ### Adrianna Staszewska (azstaszewska@wpi.edu)
 
 
-# Auto generated Stub
-
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/adriannaStaszewska/CS539Project/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/adriannaStaszewska/CS539Project/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
