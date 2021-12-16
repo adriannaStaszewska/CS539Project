@@ -29,6 +29,8 @@ We then split the dataset based on the divisions made in the dataset (train/othe
 
 Finally, we removed a percentage of the images that were in the background category (images with no objects whatsoever).  This removed many images, especially from the other segment of the dataset.
 
+<img src='assets/data_pruning.PNG' width='200' height='200'/>
+
 ## Data Augmentation
 ### Purpose
 Our approach focused on augmenting the dataset, to make the resulting model better equipped to deal with real driving situations.  We experimented with different custom-made data augmentation technique subsets to see whether the base Mask-RCNN faired better or worse.
@@ -44,7 +46,7 @@ The first technique we used to augment the data was motion blur.  This was done 
 If no such speed signs exist, then a speed is sampled from a normal distribution. This normal distribution has mean and standard deviation derived from the subset of images containing speed signs within the data.
 
 <img src='assets/32805.jpg' width='200' height='200'/>
-<img src='assets/32805_mb_zoomed.jpg' width='200' height='200'/>
+<img src='assets/32805_mb_zoomed.PNG' width='200' height='200'/>
 
 ### Rain Particles
 The next data augmentation technique we used was the simulation of rain.  To do this, we first lower the brightness of the image; rainy days are generally darker than clear days.  Then, we generate many locations to place raindrops and place the raindrops on the image using cv2.line().
@@ -81,16 +83,19 @@ A Feature Pyramid Network (FPN) is also utilized.  This approach is used to impr
 
 ## Results
 Here is a graph of loss over epochs:
+
 <img src='assets/training.png' width='200' height='200'/>
 
 The model was only able to obtain 0.045 mAP.
 We then tried again, but this time, only training on the speed limit signs to see if that made a significant difference.
 
 Here are the sign distributions of the training and test set under these conditions:
+
 <img src='assets/histogram_train.png' width='200' height='200'/>
 <img src='assets/histogram_test.png' width='200' height='200'/>
 
 Here is a graph of loss over epochs for this modified problem:
+
 <img src='assets/training_signs.png' width='200' height='200'/>
 
 This model obtained a 0.02 mAP.  We believe it fared this way because speed signs look very similar to other signs, which are no longer labeled.
