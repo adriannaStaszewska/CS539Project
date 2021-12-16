@@ -43,19 +43,18 @@ The first technique we used to augment the data was motion blur.  This was done 
 
 If no such speed signs exist, then a speed is sampled from a normal distribution. This normal distribution has mean and standard deviation derived from the subset of images containing speed signs within the data.
 
+<img src='assets/32805.jpg' width='200' height='200'/>
+<img src='assets/32805_mb_zoomed.jpg' width='200' height='200'/>
+
 ### Rain Particles
 The next data augmentation technique we used was the simulation of rain.  To do this, we first lower the brightness of the image; rainy days are generally darker than clear days.  Then, we generate many locations to place raindrops and place the raindrops on the image using cv2.line().
+
+<img src='assets/rain.png' width='200' height='200'/>
 
 ### Random Noise
 The last data augmentation technique we used was adding random noise to the image.  This was done by selecting points within the image and brightening or darkening them.
 
-## Model
-<details>
-<summary>Layers</summary>
-<p>
-Fill layers in here
-</p>
-</details>
+<img src='assets/noise.png' width='200' height='200'/>
 
 ## Methodology
 We trained a Mask R-CNN model within this project.  A brief summary of this technique is outlined within this section.
@@ -72,11 +71,7 @@ The model is trained in four steps:
 
 A Feature Pyramid Network (FPN) is also utilized.  This approach is used to improve the model's performance on smaller objects within the image.  To do this, it extracts features from lower layers before downsampling occurs, preventing the loss of significant detail of these objects.
 
-## Results
-TBD
-
 # Evaluation Metrics
-
 - rpn_class_loss: Loss of the RPN for the class prediction.
 - rpn_bbox_loss: Loss of the RPN because of bounding box differences
 - mrcnn_class_loss: Loss of the MRCNN for the class prediction.
@@ -84,8 +79,33 @@ TBD
 - mrcnn_mask_loss: Cross entropy loss for the mask head.
 - loss: aggregate of previous metrics.
 
+## Results
+Here is a graph of loss over epochs:
+<img src='assets/training.png' width='200' height='200'/>
+
+The model was only able to obtain 0.045 mAP.
+We then tried again, but this time, only training on the speed limit signs to see if that made a significant difference.
+
+Here are the sign distributions of the training and test set under these conditions:
+<img src='assets/histogram_train.png' width='200' height='200'/>
+<img src='assets/histogram_test.png' width='200' height='200'/>
+
+Here is a graph of loss over epochs for this modified problem:
+<img src='assets/training_signs.png' width='200' height='200'/>
+
+This model obtained a 0.02 mAP.  We believe it fared this way because speed signs look very similar to other signs, which are no longer labeled.
+
+We believe that there were numerous problems within the dataset that caused this result.  The most egregious problem was the fact that the polygon/ellipse masks were not tightly fit to the images at all.  In fact, reducing the radii of the ellipses by half far more closely fit the images.  With this modification, the model received 0.25 mAP (a clear increase).
+
+Finally, we added augmentations to the training set (but not the test set).  Doing so increased the mAP to 0.303 (another clear increase).
+
 ## Conclusion
-TBD
+While our training did not do very well in terms of our evaluation metrics, the result was improved through out data augmentation techniques.  We conclude that the data augmentation techniques we used successfully helped the model to become more generalized.
+
+## Future Work
+1. Improved M-RCNN: The paper we presented focused on modifications made to M-RCNN which allowed it to fare better on objects with small ROI (region of interest).  We did not make this modifications, and this may be part of the reason that our MAP was so low.
+2. Attempt using different datasets to initialize the model: We only used the COCO imageset, which may not have been optimal for this task.  Trying different image collections to train on first may yield different and interesting results.
+3. Search for alternate datesets: We only used the TT100K dataset within our experiments.  Unfortunately, this dataset contained many difficult images, obscured images, and masks that were not tightly fit to the signs they identified.  We should look for different datasets to do further experimentation on.
 
 ## Links
 - [Code](https://github.com/adriannaStaszewska/CS539Project)
@@ -99,13 +119,17 @@ TBD
 
 ## Team
 ### Davesh Datwani (dbdatwani@wpi.edu)
-
+No info provided
 
 ### Xingtong Guo (xguo3@wpi.edu)
-
+I'm a PhD student at Worcester Polytechnic Institute, major in Civil and Environment Engineering. My research interests involve indoor air quality, pollutant control, occupants' wellbeing and behavior model.
+My publications:
+1. Xingtong Guo, Kyumin Lee, Zhe Wang, Shichao Liu, Occupants’ Satisfaction with LEED- and Non-LEED-Certified Apartments Using Social Media Data. Building and Environment, 2021, 206. https://doi.org/10.1016/j.buildenv.2021.108288
+2. Xingtong Guo, Lijie Yin, Lihua Hu, Jianglin Cao, Hongwei Shen, Jiaqi Xua, Yuyan Hua,Chen Dezhen. Numerical simulation of wet deacidification process of sludge incineration flue gas. Fuel. 2020, 280. https://doi.org/10.1016/j.fuel.2020.118480
+3. Lijie Yin, Yuanjie Jia, Xingtong Guo, Dezhen Chen, Zechen Jin. Flow behaviors and heat transfer characteristics of liquid film during the pyrolysis process of molten plastics using OpenFOAM. International Journal of Heat and Mass Transfer. 2019, 133:129-136. https://doi.org/10.1016/j.ijheatmasstransfer.2018.12.098
 
 ### Yujun Mao (ymao4@wpi.edu)
-
+No info provided
 
 ### Daniel Ribaudo (dcribaudo@wpi.edu)
 I am a Computer Science graduate student with undergraduate degrees in both Computer Science and Interactive Media Game Development from Worcester Polytechnic Institute.  I enjoy fencing, jogging, drinking coffee, and playing video games.
@@ -113,5 +137,6 @@ I am a Computer Science graduate student with undergraduate degrees in both Comp
 For this project, I worked on data visualization, the website, preprocessing the JSON files / otherwise preparing the data, and motion blur implementation.
 
 ### Adrianna Staszewska (azstaszewska@wpi.edu)
-
+I am a Computer Science/Data Science double major. In my free time I enjoy reading, cooking and skiing.
+For this project, I was responsible for setting up and training the model.
 
