@@ -7,4 +7,4 @@ Repo for CS 539 ML Final Project
 
 ### Detection 
 
-![detection] (https://github.com/adriannaStaszewska/CS539Project/blob/main/assets/detection.jpg)
+![detection](https://github.com/adriannaStaszewska/CS539Project/blob/main/assets/detection.jpg)
