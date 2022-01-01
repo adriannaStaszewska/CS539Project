@@ -11,7 +11,11 @@ This project is aimed at enhancing the robustness of the mask rcnn model in dete
 
 The method to tweak the mask rcnn model to better perform on traffic sign data set has been described in the paper https://arxiv.org/pdf/1904.00649.pdf
 
-This project further  
+This project builds on the above paper.
+
+We introduce data augmentations to support camera failures in the events of motion blur, condensation and random noise.
+
+These data augmentations are implemented with the OpenCV library.   
 
 ### Proposed data augmentations to increate model robustness
 
