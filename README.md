@@ -1,5 +1,4 @@
-# CS539Project
-Repo for CS 539 ML Final Project
+## Traffic Sign Detection Using Mask RCNN
 
 ### Proposed data augmentations to increate model robustness
 
