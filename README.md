@@ -1,13 +1,13 @@
 ## Traffic Sign Detection Using Mask RCNN
 
 
-#### Project Aim
+### Project Aim
 
 Traffic sign detection is an essential capibility required by self-driving cars in today's age. A model that does not detect traffic signs in all conditions can lead road mishaps. 
 
 This project is aimed at enhancing the robustness of the mask rcnn model in detecting traffic signs. 
 
-#### Methodology 
+### Methodology 
 
 The method to tweak the mask rcnn model to better perform on traffic sign data set has been described in the paper https://arxiv.org/pdf/1904.00649.pdf
 
@@ -31,7 +31,7 @@ These data augmentations are implemented with the OpenCV library.
 ![detection2](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/detection2.jpg)
 
 
-##### Data pruning
+### Data pruning
 
 For this project, we aimed to train the mask-rcnn model on a data set provided by Tsinghua Universit, China. Reader can learn more about the data set here  https://cg.cs.tsinghua.edu.cn/traffic-sign/
 
@@ -45,7 +45,7 @@ Consequently, due the shear size of the dataset, we carried out some pruning on 
 
 ![datapruning](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/data_pruning.png)
 
-##### Model tweaks
+### Model tweaks
 
 Additionaly, we tweaked our model as per the following paper https://arxiv.org/pdf/1904.00649.pdf, for the Mask-RCNN model to adapt for traffic sign detection. The following methods are proposed;
 
@@ -55,14 +55,14 @@ Additionaly, we tweaked our model as per the following paper https://arxiv.org/p
 4. Adjusting region pass-through during detection
 
 
-##### Training
+### Training
 
 ![training](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/training.png)
 
 We can see the loss values decreasing with more epochs, but we had to limit the number of epochs due to limite resources on Google Colab. 
 
 
-#### Results 
+### Results 
 
 ##### Low mAP at first
 
@@ -79,7 +79,9 @@ We tweaked the dataset for the ellipses to now fit tightly to the instances.
 
 ##### mAP values rose by more than 5.5 times! 
 
-While the mAP values rose by more then 5 times, a lot more work is required to detect traffic signs better. 
+The new value of mAP was **0.25**. While the mAP values rose by more then 5 times, a lot more work is required for enhanced performance. 
+
+Moreover, there were a lot of anomilities in the data set which the model trained on. 
 
 ![high_map](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/high_map.png)
 
