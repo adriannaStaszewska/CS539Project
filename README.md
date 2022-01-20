@@ -77,11 +77,10 @@ The problem lied with the ellipse/polygon sizes defined in the dataset. These we
 We tweaked the dataset for the ellipses to now fit tightly to the instances. 
 
 
-##### mAP values rose by 5.5 times! 
+##### mAP values rose by more than 5.5 times! 
 
 While the mAP values rose by more then 5 times, a lot more work is required to detect traffic signs better. 
 
 ![high_map](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/high_map.png)
-
 
 
