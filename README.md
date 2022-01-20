@@ -19,16 +19,16 @@ These data augmentations are implemented with the OpenCV library.
 
 ##### Proposed data augmentations to increate model robustness
 
-![augmentatios](https://github.com/adriannaStaszewska/CS539Project/blob/main/assets/augmentations.jpg)
+![augmentatios](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/augmentations.jpg)
 
 ##### Detection after training the data on new dataset with transfer learning from COCO weights
 
-![detection](https://github.com/adriannaStaszewska/CS539Project/blob/main/assets/detection.jpg)
+![detection](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/detection.jpg)
 
 
 ##### Detection after training the model on augmented data and reducing the polygon size 
 
-![detection2](https://github.com/adriannaStaszewska/CS539Project/blob/main/assets/detection2.jpg)
+![detection2](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/detection2.jpg)
 
 
 ##### Data pruning
@@ -43,6 +43,6 @@ Consequently, due the shear size of the dataset, we carried out some pruning on 
 3. remove background noise
 
 
-![datapruning]
+![datapruning](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/data_pruning.png)
 
 #####
