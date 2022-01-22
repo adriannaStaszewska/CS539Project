@@ -45,7 +45,7 @@ Consequently, due the shear size of the dataset, we carried out some pruning on 
 
 ![datapruning](https://github.com/deveshdatwani/traffic-sign-detection-using-mask-rcnn/blob/main/assets/data_pruning.png)
 
-### Model tweaks
+### Model adaptations
 
 Additionaly, we tweaked our model as per the following paper https://arxiv.org/pdf/1904.00649.pdf, for the Mask-RCNN model to adapt for traffic sign detection. The following methods are proposed;
 
